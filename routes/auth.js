@@ -58,7 +58,7 @@ router.post("/login", async function (req, res, next) {
                res.cookie('_skateSpotToken', token, {httpOnly: true, maxAge: 60000}),
                res.json({_refreshToken: refreshToken });
     }catch (err) {
-        return next(err);
+        return res.status(err.status).json({error: "error", status: err.status, message: err.message}),next(err);
     }
 });
 
