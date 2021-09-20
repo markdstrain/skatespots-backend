@@ -8,3 +8,5 @@
 
 *.sql
 
+/skatespots-schema.sql
+/skatespots.sql
