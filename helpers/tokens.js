@@ -22,7 +22,7 @@ function createRefreshToken(user) {
         username: user.username,
         isAdmin: user.isAdmin || false,
     };
-    let refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET);
+    let refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn: '24h'});
     
     return refreshToken;
     

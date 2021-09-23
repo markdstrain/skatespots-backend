@@ -18,8 +18,9 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(cookieParser());
+
 app.use(cors({ origin: 'http://localhost:3000', credentials: true}));
+app.use(cookieParser());
 app.use(express.json()); // We're asking express to look for JSON to send and recieve messages.
 app.use(morgan("tiny"));
 

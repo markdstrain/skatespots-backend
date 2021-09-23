@@ -15,9 +15,27 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 /** Related functioons for users. */
 
 class User {
-   /** store the Refresh Token in the database */
-  
-   static async storeToken(user, refreshToken) {
+   
+
+   static async matchToken(user, refreshToken) {
+        const result = await db.query(
+            `SELECT token
+            FROM users
+            WHERE username = $1`,
+            [user]
+            );
+        const token= result.rows[0];
+
+        if(token.token !== refreshToken){
+            throw new UnauthorizedError(`Your session has expired. Please Log in`)
+        }
+        
+        return token;
+   }
+
+
+  /** store the Refresh Token in the database */
+    static async storeToken(user, refreshToken) {
        const result = await db.query(
                 `UPDATE users
                  SET token = $1
@@ -37,9 +55,27 @@ class User {
        if (!token) throw new NotFoundError(`Access not granted`)
 
        return token;
+    }
 
-       }
-   
+    static async deleteToken(user, refreshToken = null) {
+        const result = await db.query(
+                 `UPDATE users
+                  SET token = $1
+                  WHERE username = $2
+                  RETURNING username, 
+                            first_name AS firstName,
+                            last_name AS lastName,
+                            email,
+                            is_admin AS isAdmin,
+                            token
+                            `,
+             [refreshToken, user]
+        );
+         
+        const token = result.rows[0];
+        return token;
+    }
+    
    
     /** authenticate user with username, password.
      * 

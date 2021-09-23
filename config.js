@@ -7,8 +7,8 @@ require("colors");
 
 
 
-const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "another-secret-dev"; 
+const SECRET_KEY = process.env.SECRET_KEY;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET; 
 
 const PORT = +process.env.PORT || 3001;
 
