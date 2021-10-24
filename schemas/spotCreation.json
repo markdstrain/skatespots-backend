@@ -1,0 +1,76 @@
+{
+          "$schema": "http://json-schema.org/draft-07/schema",
+          "$id": "http://example.com/example.json",
+          "type": "object",
+          "title": "The root schema",
+          "description": "The root schema comprises the entire JSON document.",
+          "default": {},
+          "examples": [
+              {
+                  "user": "user",
+                  "title": "Kanis Park",
+                  "coordinates": [
+                      12.123234234,
+                      -182.32342
+                  ]
+              }
+          ],
+          "required": [
+              "user",
+              "title",
+              "coordinates"
+          ],
+          "properties": {
+              "user": {
+                  "$id": "#/properties/user",
+                  "type": "string",
+                  "title": "The user schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": "",
+                  "examples": [
+                      "user"
+                  ]
+              },
+              "title": {
+                  "$id": "#/properties/title",
+                  "type": "string",
+                  "title": "The title schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": "",
+                  "examples": [
+                      "Kanis Park"
+                  ]
+              },
+              "coordinates": {
+                  "$id": "#/properties/coordinates",
+                  "type": "array",
+                  "title": "The coordinates schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": [],
+                  "examples": [
+                      [
+                          12.123234234,
+                          -182.32342
+                      ]
+                  ],
+                  "additionalItems": true,
+                  "items": {
+                      "$id": "#/properties/coordinates/items",
+                      "anyOf": [
+                          {
+                              "$id": "#/properties/coordinates/items/anyOf/0",
+                              "type": "number",
+                              "title": "The first anyOf schema",
+                              "description": "An explanation about the purpose of this instance.",
+                              "default": 0.0,
+                              "examples": [
+                                  12.123234234,
+                                  -182.32342
+                              ]
+                          }
+                      ]
+                  }
+              }
+          },
+          "additionalProperties": true
+      }

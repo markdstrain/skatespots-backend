@@ -5,24 +5,23 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
-
 const { NotFoundError } = require("./expressError");
 
 
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const spotRoutes = require("./routes/spots");
-
+const { authenticateJWT } = require("./middleware/auth");
 
 const morgan = require("morgan");
-
 const app = express();
-
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true}));
 app.use(cookieParser());
 app.use(express.json()); // We're asking express to look for JSON to send and recieve messages.
 app.use(morgan("tiny"));
+app.use(authenticateJWT);
+
 
 
 app.use("/auth", authRoutes);

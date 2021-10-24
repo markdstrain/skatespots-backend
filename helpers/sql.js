@@ -30,6 +30,26 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
         setCols: cols.join(", "),
         values: Object.values(dataToUpdate),
     };
+
 }
 
-module.exports = { sqlForPartialUpdate};
+function sqlForDetailEntry(dataToUpdate, jsToSql) {
+          const keys = Object.keys(dataToUpdate);
+          if (keys.length === 0) throw new BadRequestError("No Data");
+          
+          const cols = keys.map((colName) =>
+                    `"${jsToSql[colName] || colName}"`,
+          );
+
+          const indexes = keys.map((colName, idx) =>
+                    `$${idx + 3}`
+          );
+          
+          return {
+                    setCols: cols.join(","),
+                    values: Object.values(dataToUpdate),
+                    indexes: indexes.join(",")
+          }
+}
+
+module.exports = { sqlForPartialUpdate, sqlForDetailEntry};

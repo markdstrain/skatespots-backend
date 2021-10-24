@@ -5,6 +5,8 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
+const app = require("../app");
+
 
 
 /** Middleware: Authenticate user.
@@ -15,25 +17,26 @@ const { UnauthorizedError } = require("../expressError");
  * It's not an error if no token was provided or if the token is not valid.
  */
 
-function authenticateJWT(req, res, next) {
-    try {
-        const accessToken = req.cookies['_skateSpotToken'];
-        if(accessToken){
-            res.locals.user = jwt.verify(accessToken,SECRET_KEY);
-        }
-        return next();
-    } catch (err) {
-        return next();
-    }
+ function authenticateJWT(req, res, next) {
+          try {
+                    const authHeader = req.headers && req.headers.authorization;
+                    if (authHeader) {
+                              const token = authHeader.replace(/^[Bb]earer /, "").trim();
+                    res.locals.user = jwt.verify(token, SECRET_KEY);
+                    }
+                    return next();
+          } catch (err) {
+                    return next();
+          }
 }
 
 function ensureLoggedIn(req, res, next) {
-    try {
-        if (!res.locals.user) throw new UnauthorizedError();
-        return next();
-    }catch (err) {
-        return next(err);
-    }
+          try {
+                    if (!res.locals.user) throw new UnauthorizedError();
+                    return next();
+          } catch (err) {
+                    return next(err);
+          }
 }
 
 /** Middleware to use when they be logged in as an admin user.
@@ -43,8 +46,15 @@ function ensureLoggedIn(req, res, next) {
 
 function ensureAdmin(req, res, next) {
     try {
-        if (!res.locals.user || !res.locals.user.isAdmin) {
-            throw new UnauthorizedError();
+          //authenticate JWT
+          const accessToken = req.cookies["_skateSpotToken"];
+         console.log((req.cookies['_skateSpotToken']));
+          if(accessToken){
+                    res.locals.user = jwt.verify(accessToken, SECRET_KEY);
+          }
+          //See if they are an admin.
+          if (!res.locals.user || !res.locals.user.isAdmin) {
+                    throw new UnauthorizedError("You gotta be a special guy to be in here. 🤓");
         }
         return next();
     } catch (err) {
@@ -60,13 +70,21 @@ function ensureAdmin(req, res, next) {
 
 function ensureCorrectUserOrAdmin(req, res, next) {
     try {
-        const user = res.locals.user;
-        if (!(user && (user.isAdmin  || user.username === req.params.username))) {
-            throw new UnauthorizedError();
-        }
-        return next();
+
+          //authenticate JWT
+          const accessToken = req.cookies["_skateSpotToken"];
+         console.log((req.cookies['_skateSpotToken']));
+          if(accessToken){
+                    res.locals.user = jwt.verify(accessToken, SECRET_KEY);
+          }
+
+          const user = res.locals.user;
+          if (!(user && (user.isAdmin  || user.username === req.params.username))) {
+                    throw new UnauthorizedError();
+          }
+          return next();
     } catch (err) {
-        return next(err);
+          return next(err);
     }
 }
 

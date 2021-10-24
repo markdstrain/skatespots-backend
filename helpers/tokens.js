@@ -12,7 +12,7 @@ function createToken(user) {
         isAdmin: user.isAdmin || false,
     };
 
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1m' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '10m' });
 }
 function createRefreshToken(user) {
     console.assert(user.isAdmin !== undefined,
