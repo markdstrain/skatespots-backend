@@ -67,8 +67,6 @@ class Spot {
                   
                    
                     // Now we make our query string for spot_details table
-                    console.log(setCols)
-                    console.log(indexes)
                     const querySql =
                               `INSERT INTO spot_details (
                                         detail_id,         
@@ -88,7 +86,31 @@ class Spot {
                     
                     // send back our new object.
                     return spot;
-      }
-      
+          }
+
+          static async getSpots(){
+                    const spotRes = await db.query(
+                              `SELECT *
+                              FROM spots
+                              INNER JOIN spot_details
+                              ON spots.spot_id = spot_details.id
+                              `);
+                        
+                
+                    const spots = spotRes
+                
+                
+                    return spots;
+                  }
+
+                  static async getASpot(id){
+                              const spotRes = await db.query(
+                                    `SELECT *
+                                     FROM spots
+                                     WHERE spot_id = $1`, [id]);
+                          
+                              const spot = spotRes.rows[0];
+                              return spot;
+                  }
 }
 module.exports = Spot;

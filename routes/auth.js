@@ -82,18 +82,5 @@ router.post("/register", async function (req, res, next) {
  */
 
 
-router.post("/logout", async function (req, res, next) {
-    try {
-        const { username } = req.body;
-
-        await User.deleteToken(username) ;
-        res.clearCookie('expires');
-        
-        return  res.json("logged Out");
-    }catch (err) {
-        return next(err);
-    }
-});
-
 module.exports = router;
 

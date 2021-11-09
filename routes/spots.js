@@ -19,12 +19,22 @@ const router = express.Router({ mergeParams: true });
 
  router.get("/", async function (req, res, next) {
           try {
-                    const spots = await Spot.getAll();
-                    return res.json({ spots });
+                    const response = await Spot.getSpots();
+                    const spots = response.rows
+                    return res.json({spots});
           }catch (err) {
                     return next(err);
           }     
 });
+
+router.get("/:id", async function (req, res, next) {
+          try {
+            const spot= await Spot.getASpot(req.params.id);
+            return res.json({ spot });
+          } catch (err) {
+            return next(err);
+          }
+        });
 
 
 router.post("/",ensureLoggedIn, async function (req, res, next) {
